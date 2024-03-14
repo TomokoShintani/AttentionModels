@@ -14,7 +14,7 @@ class BiLSTM_Attention(nn.Module):
         
         self.embedding = nn.Embedding(vocab_num, embedding_dim)
         self.bilstm = nn.LSTM(embedding_dim, hidden_dim, batch_first=True, bidirectional=True)
-        self.out = nn.Linear(hidden_dim*2, num_classes) #今回は二値分類なので
+        self.out = nn.Linear(hidden_dim*2, num_classes)
         
     def attention_net(self, lstm_output, final_state):
         hidden = final_state.view(-1, hidden_dim*2, 1) #hidden(batch, hidden_num*2, num_layer=1)
@@ -33,7 +33,8 @@ class BiLSTM_Attention(nn.Module):
         attention_output = self.attention_net(lstm_output, final_hidden_state)
         output = self.out(attention_output)
         return output
-    
+
+ 
 # train function
 def train(net, loss_func, optimizer, n_epochs):
     for epoch in range(n_epochs):
@@ -100,7 +101,7 @@ def train(net, loss_func, optimizer, n_epochs):
             np.mean(losses_valid),
             acc_val/n_val))
 
-# RUN
+#-----RUN-----#
 # Parameters for model
 vocab_num = len(vocabulary) #これはlen(vocabulary)inputの系列長ではない。
 embedding_dim = 100
@@ -111,7 +112,7 @@ num_classes = 2
 lr = 0.0002
 weight_decay = 4e-7
 
-# Make instance of the model class
+# Make instance of model class
 model_1 = BiLSTM_Attention(vocab_num, embedding_dim, hidden_dim, num_classes)
 
 # Parameters for train function
